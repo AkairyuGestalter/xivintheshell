@@ -21,7 +21,7 @@ export let displayedSkills = [
 	SkillName.Freeze,
 	SkillName.Flare,
 	SkillName.LeyLines,
-	SkillName.Sharpcast,
+	//SkillName.Sharpcast,
 	SkillName.Blizzard4,
 	SkillName.Fire4,
 	SkillName.BetweenTheLines,

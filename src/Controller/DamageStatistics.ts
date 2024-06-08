@@ -35,7 +35,7 @@ const abilities = new Set<SkillName>([
 	SkillName.Manaward,
 	SkillName.Manafont,
 	SkillName.LeyLines,
-	SkillName.Sharpcast,
+	//SkillName.Sharpcast,
 	SkillName.BetweenTheLines,
 	SkillName.AetherialManipulation,
 	SkillName.Triplecast,

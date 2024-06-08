@@ -9,6 +9,7 @@ export class StatsModifier
 	spellRecastTimeScale = 1;
 	manaCostFire = 1;
 	manaCostIce = 1;
+	manaIceSpellRecovery = 0;
 	llApplied = false;
 	manaRegen = 0;
 	uhConsumption = 0;
@@ -21,6 +22,7 @@ export class StatsModifier
 		this.spellRecastTimeScale = 1;
 		this.manaCostFire = 1;
 		this.manaCostIce = 1;
+		this.manaIceSpellRecovery = 0;
 
 		// additive constant
 		this.manaRegen = 0;
@@ -41,6 +43,7 @@ export class StatsModifier
 		this.manaCostIce *= other.manaCostIce;
 
 		this.manaRegen += other.manaRegen;
+		this.manaIceSpellRecovery += other.manaIceSpellRecovery;
 		this.uhConsumption += other.uhConsumption;
 
 		this.llApplied = this.llApplied || other.llApplied;
@@ -62,17 +65,20 @@ export class StatsModifier
 		let ui = resources.get(ResourceType.UmbralIce);
 		let uiMod = new StatsModifier();
 		if (ui.availableAmount() === 1) {
-			uiMod.manaRegen = 3000;
-			uiMod.manaCostFire = 0;
-			uiMod.manaCostIce = 0.75;
-		} else if (ui.availableAmount() === 2) {
-			uiMod.manaRegen = 4500;
-			uiMod.manaCostFire = 0;
-			uiMod.manaCostIce = 0.5;
-		} else if (ui.availableAmount() === 3) {
-			uiMod.manaRegen = 6000;
+			uiMod.manaRegen = 0;
 			uiMod.manaCostFire = 0;
 			uiMod.manaCostIce = 0;
+			uiMod.manaIceSpellRecovery = 2500;
+		} else if (ui.availableAmount() === 2) {
+			uiMod.manaRegen = 0;
+			uiMod.manaCostFire = 0;
+			uiMod.manaCostIce = 0;
+			uiMod.manaIceSpellRecovery = 5000;
+		} else if (ui.availableAmount() === 3) {
+			uiMod.manaRegen = 0;
+			uiMod.manaCostFire = 0;
+			uiMod.manaCostIce = 0;
+			uiMod.manaIceSpellRecovery = 10000;
 			uiMod.castTimeFire = 0.5;
 		}
 		modifiers.push(uiMod);

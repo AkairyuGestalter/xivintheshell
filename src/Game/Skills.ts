@@ -62,18 +62,18 @@ const skillInfos = [
 	new SkillInfo(SkillName.Manafont, ResourceType.cd_Manafont, Aspect.Other, false,
 		0, 0, 0, 0.88),// delayed, test by manafont->desp from 0 mana
 	new SkillInfo(SkillName.Fire3, ResourceType.cd_GCD, Aspect.Fire, true,
-		3.5, 2000, 260, 1.292),
+		3.5, 2000, 280, 1.292),
 	new SkillInfo(SkillName.Blizzard3, ResourceType.cd_GCD, Aspect.Ice, true,
-		3.5, 800, 260, 0.89),
+		3.5, 800, 280, 0.89),
 	new SkillInfo(SkillName.Freeze, ResourceType.cd_GCD, Aspect.Ice, true,
 		2.8, 1000, 120, 0.664),
 	new SkillInfo(SkillName.Flare, ResourceType.cd_GCD, Aspect.Fire, true,
-		4, 0, 280, 1.157), // mana is handled separately
+		4, 0, 240, 1.157), // mana is handled separately
 
 	new SkillInfo(SkillName.LeyLines, ResourceType.cd_LeyLines, Aspect.Other, false,
 		0, 0, 0, 0.49),// delayed
-	new SkillInfo(SkillName.Sharpcast, ResourceType.cd_Sharpcast, Aspect.Other,false,
-		0, 0, 0), // instant
+	// new SkillInfo(SkillName.Sharpcast, ResourceType.cd_Sharpcast, Aspect.Other,false,
+	// 	0, 0, 0), // instant
 	new SkillInfo(SkillName.Blizzard4, ResourceType.cd_GCD, Aspect.Ice, true,
 		2.5, 800, 310, 1.156),
 	new SkillInfo(SkillName.Fire4, ResourceType.cd_GCD, Aspect.Fire, true,
@@ -95,9 +95,9 @@ const skillInfos = [
 		0, 0, 880, 0.63),
 
 	new SkillInfo(SkillName.HighFire2, ResourceType.cd_GCD, Aspect.Fire, true,
-		3, 1500, 140, 1.154),
+		3, 1500, 100, 1.154),
 	new SkillInfo(SkillName.HighBlizzard2, ResourceType.cd_GCD, Aspect.Ice, true,
-		3, 800, 140, 1.158),
+		3, 800, 100, 1.158),
 	new SkillInfo(SkillName.Amplifier, ResourceType.cd_Amplifier, Aspect.Other, false,
 		0, 0, 0), // ? (assumed to be instant)
 	new SkillInfo(SkillName.Paradox, ResourceType.cd_GCD, Aspect.Other, true,
@@ -192,6 +192,7 @@ export class SkillsList extends Map<SkillName, Skill> {
 				return true;
 			},
 			(game: GameState, node: ActionNode) => {
+				game.gainUiMana();
 				if (game.getFireStacks() === 0) // no AF
 				{
 					game.castSpell({skillName: SkillName.Blizzard, onCapture: (cap: SkillCaptureCallbackInfo) => {
@@ -230,15 +231,15 @@ export class SkillsList extends Map<SkillName, Skill> {
 
 		let potentiallyGainFirestarter = function(game: GameState) {
 			// firestarter
-			let sc = game.resources.get(ResourceType.Sharpcast);
+			/*let sc = game.resources.get(ResourceType.Sharpcast);
 			if (sc.available(1)) {
 				gainFirestarterProc(game);
 				sc.consume(1);
 				sc.removeTimer();
-			} else {
+			} else {*/
 				let rand = game.rng(); // firestarter proc
 				if (game.config.procMode===ProcMode.Always || (game.config.procMode===ProcMode.RNG && rand < 0.4)) gainFirestarterProc(game);
-			}
+			//}
 		}
 
 		// Fire
@@ -303,14 +304,14 @@ export class SkillsList extends Map<SkillName, Skill> {
 			if (thunder.available(1)) {
 				console.assert(thunder.node);
 				(thunder.node as ActionNode).removeUnresolvedPotencies();
-				thunder.overrideTimer(game, 30);
+				thunder.overrideTimer(game, 27);
 			} else {
 				thunder.gain(1);
 				controller.reportDotStart(game.getDisplayTime());
 				game.resources.addResourceEvent({
 					rscType: ResourceType.ThunderDoT,
 					name: "drop thunder DoT",
-					delay: 30,
+					delay: 27,
 					fnOnRsc: rsc=>{
 						  rsc.consume(1);
 						  controller.reportDotDrop(game.getDisplayTime());
@@ -336,14 +337,14 @@ export class SkillsList extends Map<SkillName, Skill> {
 				node.addPotency(pInitial);
 			}
 			// dots
-			for (let i = 0; i < 10; i++) {
+			for (let i = 0; i < 9; i++) {
 				let pDot = new Potency({
 					sourceTime: game.getDisplayTime(),
 					sourceSkill: SkillName.Thunder3,
 					aspect: Aspect.Lightning,
-					basePotency: game.config.adjustedDoTPotency(35),
+					basePotency: game.config.adjustedDoTPotency(45),
 					snapshotTime: undefined,
-					description: "DoT " + (i+1) + "/10"
+					description: "DoT " + (i+1) + "/9"
 				});
 				pDot.modifiers = mods;
 				node.addPotency(pDot);
@@ -353,15 +354,15 @@ export class SkillsList extends Map<SkillName, Skill> {
 		// Thunder 3
 		skillsList.set(SkillName.Thunder3, new Skill(SkillName.Thunder3,
 			() => {
-				return true;
+				return game.hasThunderhead();
 			},
 			(game, node) => {
-				if (game.resources.get(ResourceType.Thundercloud).available(1)) // made instant via thundercloud
-				{
+				/*if (game.resources.get(ResourceType.Thundercloud).available(1)) // made instant via thundercloud
+				{*/
 					// potency
-					addT3Potencies(node, true); // should call on capture
+					addT3Potencies(node, false); // should call on capture
 					let p0 = node.getPotencies()[0];
-					p0.base = 400;
+					p0.base = 160;
 					node.getPotencies().forEach(p=>{ p.snapshotTime = game.getDisplayTime(); });
 
 					// tincture
@@ -375,20 +376,20 @@ export class SkillsList extends Map<SkillName, Skill> {
 							controller.resolvePotency(p0);
 							applyThunderDoT(game, node);
 						},
-						dealDamage: false,
+						dealDamage: true,
 						node: node
 					});
 					let thundercloud = game.resources.get(ResourceType.Thundercloud);
 					thundercloud.consume(1);
 					thundercloud.removeTimer();
 					// if there's a sharpcast stack, consume it and gain (a potentially new) proc
-					let sc = game.resources.get(ResourceType.Sharpcast);
+					/*let sc = game.resources.get(ResourceType.Sharpcast);
 					if (sc.available(1)) {
 						game.gainThundercloudProc();
 						sc.consume(1);
 						sc.removeTimer();
-					}
-				} else {
+					}*/
+				/*}*/ /*else {
 					game.castSpell({skillName: SkillName.Thunder3, onButtonPress: () => {
 						// nothing here really
 						}, onCapture: (cap: SkillCaptureCallbackInfo) => {
@@ -413,7 +414,7 @@ export class SkillsList extends Map<SkillName, Skill> {
 					}, onApplication: (app: SkillApplicationCallbackInfo) => {
 						applyThunderDoT(game, node);
 					}, node: node});
-				}
+				}*/
 			}
 		));
 
@@ -423,13 +424,18 @@ export class SkillsList extends Map<SkillName, Skill> {
 		// Manafont
 		skillsList.set(SkillName.Manafont, new Skill(SkillName.Manafont,
 			() => {
-				return true;
+				return game.getFireStacks() > 0; // in AF
 			},
 			(game, node) => {
 				let useSkillEvent = game.useInstantSkill({
 					skillName: SkillName.Manafont,
 					onApplication: () => {
-						game.resources.get(ResourceType.Mana).gain(3000);
+						game.resources.get(ResourceType.Mana).gain(10000);
+						game.resources.get(ResourceType.UmbralHeart).gain(3);
+						game.gainThundercloudProc();
+						game.resources.get(ResourceType.Paradox).gain(1);
+						game.switchToAForUI(ResourceType.AstralFire, 3);
+						game.startOrRefreshEnochian();
 						node.resolveAll(game.getDisplayTime());
 					},
 					dealDamage: false,
@@ -472,6 +478,7 @@ export class SkillsList extends Map<SkillName, Skill> {
 			},
 			(game, node) => {
 				game.castSpell({skillName: SkillName.Blizzard3, onCapture: (cap: SkillCaptureCallbackInfo) => {
+					game.gainUiMana();
 					game.switchToAForUI(ResourceType.UmbralIce, 3);
 					game.startOrRefreshEnochian();
 				}, onApplication: (app: SkillApplicationCallbackInfo) => {
@@ -486,6 +493,7 @@ export class SkillsList extends Map<SkillName, Skill> {
 			},
 			(game, node) => {
 				game.castSpell({skillName: SkillName.Freeze, onCapture: (cap: SkillCaptureCallbackInfo) => {
+					game.gainUiMana();
 					game.resources.get(ResourceType.UmbralHeart).gain(3);
 				}, onApplication: (app: SkillApplicationCallbackInfo) => {
 				}, node: node});
@@ -515,7 +523,7 @@ export class SkillsList extends Map<SkillName, Skill> {
 		));
 
 		// Sharpcast
-		addResourceAbility({skillName: SkillName.Sharpcast, rscType: ResourceType.Sharpcast, instant: true, duration: 30});
+		// addResourceAbility({skillName: SkillName.Sharpcast, rscType: ResourceType.Sharpcast, instant: true, duration: 30});
 
 		// Blizzard 4
 		skillsList.set(SkillName.Blizzard4, new Skill(SkillName.Blizzard4,
@@ -524,6 +532,7 @@ export class SkillsList extends Map<SkillName, Skill> {
 			},
 			(game, node) => {
 				game.castSpell({skillName: SkillName.Blizzard4, onCapture: (cap: SkillCaptureCallbackInfo) => {
+					game.gainUiMana();
 					game.resources.get(ResourceType.UmbralHeart).gain(3);
 				}, onApplication: (app: SkillApplicationCallbackInfo) => {
 				}, node: node});
@@ -646,6 +655,7 @@ export class SkillsList extends Map<SkillName, Skill> {
 				game.useInstantSkill({
 					skillName: SkillName.UmbralSoul,
 					onCapture: () => {
+						game.gainUiMana();
 						game.resources.get(ResourceType.UmbralIce).gain(1);
 						game.resources.get(ResourceType.UmbralHeart).gain(1);
 						game.startOrRefreshEnochian();
@@ -735,7 +745,8 @@ export class SkillsList extends Map<SkillName, Skill> {
 					}
 					if (game.getFireStacks() > 0) {// firestarter proc
 						game.resources.get(ResourceType.AstralFire).gain(1);
-						potentiallyGainFirestarter(game);
+						// potentiallyGainFirestarter(game);
+						gainFirestarterProc(game);
 					}
 				}, onApplication: (app: SkillApplicationCallbackInfo) => {
 				}, node: node});

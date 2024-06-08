@@ -45,7 +45,7 @@ export class GameState {
 		this.resources.set(ResourceType.UmbralHeart, new Resource(ResourceType.UmbralHeart, 3, 0));
 
 		this.resources.set(ResourceType.LeyLines, new Resource(ResourceType.LeyLines, 1, 0)); // capture
-		this.resources.set(ResourceType.Sharpcast, new Resource(ResourceType.Sharpcast, 1, 0));
+		// this.resources.set(ResourceType.Sharpcast, new Resource(ResourceType.Sharpcast, 1, 0));
 		this.resources.set(ResourceType.Enochian, new Resource(ResourceType.Enochian, 1, 0));
 		this.resources.set(ResourceType.Paradox, new Resource(ResourceType.Paradox, 1, 0));
 		this.resources.set(ResourceType.Firestarter, new Resource(ResourceType.Firestarter, 1, 0));
@@ -67,7 +67,7 @@ export class GameState {
 		// skill CDs (also a form of resource)
 		this.cooldowns = new CoolDownState(this);
 		this.cooldowns.set(ResourceType.cd_GCD, new CoolDown(ResourceType.cd_GCD, config.adjustedCastTime(2.5), 1, 1));
-		this.cooldowns.set(ResourceType.cd_Sharpcast, new CoolDown(ResourceType.cd_Sharpcast, 30, 2, 2));
+		// this.cooldowns.set(ResourceType.cd_Sharpcast, new CoolDown(ResourceType.cd_Sharpcast, 30, 2, 2));
 		this.cooldowns.set(ResourceType.cd_LeyLines, new CoolDown(ResourceType.cd_LeyLines, 120, 1, 1));
 		this.cooldowns.set(ResourceType.cd_Transpose, new CoolDown(ResourceType.cd_Transpose, 5, 1, 1));
 		this.cooldowns.set(ResourceType.cd_Manaward, new CoolDown(ResourceType.cd_Manaward, 120, 1, 1));
@@ -279,6 +279,7 @@ export class GameState {
 	getIceStacks() { return this.resources.get(ResourceType.UmbralIce).availableAmount(); }
 	getUmbralHearts() { return this.resources.get(ResourceType.UmbralHeart).availableAmount(); }
 	getMP() { return this.resources.get(ResourceType.Mana).availableAmount(); }
+	hasThunderhead() { return this.resources.get(ResourceType.Thundercloud).availableAmount() > 0; }
 
 	getDisplayTime() {
 		return (this.time - this.config.countdown);
@@ -287,7 +288,7 @@ export class GameState {
 	// could happen from sharpcasted T3, or from a tick
 	gainThundercloudProc() {
 		let thundercloud = this.resources.get(ResourceType.Thundercloud);
-		let duration = this.config.extendedBuffTimes ? 41 : 40;
+		let duration = this.config.extendedBuffTimes ? 31 : 30;
 		if (thundercloud.available(1)) { // already has a proc; reset its timer
 			thundercloud.overrideTimer(this, duration);
 		} else { // there's currently no proc. gain one.
@@ -308,8 +309,12 @@ export class GameState {
 		let ui = this.resources.get(ResourceType.UmbralIce);
 		let uh = this.resources.get(ResourceType.UmbralHeart);
 		let paradox = this.resources.get(ResourceType.Paradox);
+
 		if (rscType===ResourceType.AstralFire)
 		{
+			if (af.availableAmount() < 1) {
+				this.gainThundercloudProc();
+			}
 			af.gain(numStacks);
 			if (ui.available(3) && uh.available(3)) {
 				paradox.gain(1);
@@ -318,10 +323,14 @@ export class GameState {
 		}
 		else if (rscType===ResourceType.UmbralIce)
 		{
-			ui.gain(numStacks);
-			if (af.available(3)) {
-				paradox.gain(1);
+			if (ui.availableAmount() < 1) {
+				this.gainThundercloudProc();
 			}
+			ui.gain(numStacks);
+			/*if (af.available(3)) {
+				paradox.gain(1);
+			}*/
+			paradox.consume(paradox.availableAmount());
 			af.consume(af.availableAmount());
 		}
 	}
@@ -343,6 +352,12 @@ export class GameState {
 			manaCost = baseManaCost;
 		}
 		return [manaCost, uhConsumption];
+	}
+
+	gainUiMana() {
+		let mod = StatsModifier.fromResourceState(this.resources);
+		let mana = this.resources.get(ResourceType.Mana);
+		mana.gain(mod.manaIceSpellRecovery);
 	}
 
 	captureManaRegenAmount() {
@@ -474,8 +489,8 @@ export class GameState {
 			game.resources.takeResourceLock(ResourceType.NotAnimationLocked, game.config.getSkillAnimationLock(props.skillName));
 		}
 
-		// Paradox made instant via UI
-		if (props.skillName === SkillName.Paradox && this.getIceStacks() > 0) {
+		// Paradox made instant via AF
+		if (props.skillName === SkillName.Paradox && this.getFireStacks() > 0) {
 			instantCast(this, undefined);
 			return;
 		}

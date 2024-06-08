@@ -134,14 +134,14 @@ function BuffsDisplay(props) {
 		timeRemaining: data.leyLinesCountdown.toFixed(2),
 		className: data.leyLinesCountdown > 0 ? "" : "hidden"
 	});
-	buffs.push({
+	/* buffs.push({
 		rscType: ResourceType.Sharpcast,
 		onSelf: true,
 		enabled: true,
 		stacks:1,
 		timeRemaining: data.sharpcastCountdown.toFixed(2),
 		className: data.sharpcastCountdown > 0 ? "" : "hidden"
-	});
+	}); */
 	buffs.push({
 		rscType: ResourceType.Triplecast,
 		onSelf: true,
