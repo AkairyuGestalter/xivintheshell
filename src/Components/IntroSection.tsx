@@ -96,7 +96,7 @@ export function IntroSection(props: {}) {
 								</div>
 								<div className="paragraph">
 								If the browser cache is somehow messed up (likely due to invalid game states), this is how to reset it:<br/>
-								Enter this tool from <b>{"https://miyehn.me/ffxiv-blm-rotation/#/{command}"}</b> replacing <b>{"{command}"}</b> with one of the following:
+								Enter this tool from <b>{"https://akairyugestalter.github.io/ffxiv-blm-rotation/#/{command}"}</b> replacing <b>{"{command}"}</b> with one of the following:
 								<ul>
 									<li style={smallGap}><b>resetResourceOverrides</b>: delete all resource overrides and all actions on the current timeline.</li>
 									<li style={smallGap}><b>resetAll</b>: delete all browser-cached settings.</li>
@@ -109,7 +109,7 @@ export function IntroSection(props: {}) {
 							</div>
 							<div className="paragraph">
 								如果浏览器缓存因不明原因出问题（比如预设了刚打完绝望满蓝这样的“非法状态”），可尝试用以下方法重置浏览器缓存：<br/>
-								用以下链接进入本工具：<b>{"https://miyehn.me/ffxiv-blm-rotation/#/{command}"}</b>，然后把<b>{"{command}"}</b>替换成以下两个指令之一：
+								用以下链接进入本工具：<b>{"https://akairyugestalter.github.io/ffxiv-blm-rotation/#/{command}"}</b>，然后把<b>{"{command}"}</b>替换成以下两个指令之一：
 								<ul>
 									<li style={smallGap}><b>resetResourceOverrides</b>: 删除当前时间线上的所有资源预设和技能</li>
 									<li style={smallGap}><b>resetAll</b>: 删除所有本工具相关的浏览器缓存</li>
@@ -129,11 +129,13 @@ export function IntroSection(props: {}) {
 				<div className="paragraph">{localize({en: "This tool is made by:", zh: "作者："})}</div>
 				{localize({
 					en: <ul>
+						<li><b>Akairyu (Akairyu Gestalter @ Ultros)</b>: Modifications to support level 90 Dawntrail BLM</li>
 						<li><b>Eshiya (Galahad Donnadieu @ Exodus)</b>: the PM and the big brain BLM</li>
 						<li><b>miyehn (Ellyn Waterford @ Sargatanas)</b>: software developer and a humble BLM student</li>
 						<li><b>Turtle, Spider, Santa,</b> and many other players who contributed feature suggestions, timeline markers, bug reports, or in any other way</li>
 					</ul>,
 					zh: <ul>
+						<li><b>Akairyu (Akairyu Gestalter @ Ultros)</b>: Modifications to support level 90 Dawntrail BLM</li>
 						<li><b>Eshiya（加拉哈德 @ 沃仙曦染）</b>：PM；是个真黑魔玩家</li>
 						<li><b>miyehn（米岩 @ 海猫茶屋，国服长草中）</b>：程序；是个云黑魔玩家</li>
 						<li><b>Turtle, Spider, Santa</b> 等，以体验反馈、报bug、时间轴标记等形式为这个工具作出过无私贡献的玩家们</li>
@@ -143,11 +145,11 @@ export function IntroSection(props: {}) {
 					en: <div className={"paragraph"}>
 						If you have questions,
 						encountered bugs, or would like to suggest features, you can find me on discord
-						(miyehn), or via email (rainduym@gmail.com). In case of sending me a bug report, attaching the
+						(akairyu). In case of sending me a bug report, attaching the
 						fight record (download "fight.txt" from the right or name it anything else) would be very helpful.
 					</div>,
 					zh: <div className={"paragraph"}>
-						如果遇到bug或者有任何工具相关的问题和建议，都欢迎反馈给我（miyehn），可QQ联系（870340705），加时请注明来意。如果是反馈bug，最好把能够复现bug的战斗记录文件（从右侧下载的fight.txt）一起发给我。
+						如果遇到bug或者有任何工具相关的问题和建议，都欢迎反馈给我（akairyu）。如果是反馈bug，最好把能够复现bug的战斗记录文件（从右侧下载的fight.txt）一起发给我。
 					</div>,
 				})}
 
@@ -160,6 +162,7 @@ export function IntroSection(props: {}) {
 				{localize({
 					en:
 				<ul>
+					<li><a href={"https://github.com/akairyugestalter/ffxiv-blm-rotation"}>Dawntrail level 90 Github repository</a></li>
 					<li><a href={"https://github.com/miyehn/ffxiv-blm-rotation"}>Github repository</a></li>
 					<li><a href={"https://spide-r.github.io/ffxiv-blm-rotation/"}>Black Mage in the Bozjan Shell</a>: a variation of this tool for Save the Queens areas by <b>A'zhek Silvaire @ Zalera</b></li>
 					<li><a href={"https://na.finalfantasyxiv.com/jobguide/blackmage/"}>Official FFXIV black mage job
@@ -170,6 +173,7 @@ export function IntroSection(props: {}) {
 				</ul>,
 					zh:
 						<ul>
+						<li><a href={"https://github.com/akairyugestalter/ffxiv-blm-rotation"}>Dawntrail level 90 Github repository</a></li>
 						<li><a href={"https://github.com/miyehn/ffxiv-blm-rotation"}>Github页面</a></li>
 						<li><a href={"https://spide-r.github.io/ffxiv-blm-rotation/"}>博兹雅版云黑魔（Black Mage in the Bozjan Shell）</a>: 本工具的博兹雅/天佑女王版。制作者： <b>A'zhek Silvaire @ Zalera</b></li>
 						<li><a href={"https://na.finalfantasyxiv.com/jobguide/blackmage/"}>官方的黑魔法师职业介绍</a></li>

@@ -13,7 +13,7 @@ export class PresetLinesManager {
         let loadLocalSuccess = this.#load();
         if (!loadLocalSuccess) {
             asyncFetch(
-                "https://miyehn.me/ffxiv-blm-rotation/presets/lines/default.txt",
+                "https://akairyugestalter.github.io/ffxiv-blm-rotation/presets/lines/default.txt",
                 (data)=>{
                 this.deserializeAndAppend(JSON.parse(data));
                 updateSkillSequencePresetsView();

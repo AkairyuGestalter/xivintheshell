@@ -198,7 +198,7 @@ class SkillButton extends React.Component {
 					position: "absolute",
 					width: 48,
 					height: 48,
-					background: "url('https://miyehn.me/ffxiv-blm-rotation/misc/skillIcon_overlay.png') no-repeat"
+					background: "url('https://akairyugestalter.github.io/ffxiv-blm-rotation/misc/skillIcon_overlay.png') no-repeat"
 				}}></div>
 				<div style={{ // grey out
 					position: "absolute",
@@ -212,7 +212,7 @@ class SkillButton extends React.Component {
 					background: readyOverlay
 				}}></div>
 			</div>
-			<img hidden={!this.props.highlight} src="https://miyehn.me/ffxiv-blm-rotation/misc/proc.png" style={{
+			<img hidden={!this.props.highlight} src="https://akairyugestalter.github.io/ffxiv-blm-rotation/misc/proc.png" style={{
 				position: "absolute",
 				width: 44,
 				height: 44,

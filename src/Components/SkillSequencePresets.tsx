@@ -97,7 +97,7 @@ export class SkillSequencePresets extends React.Component {
 			<LoadJsonFromFileOrUrl
 				allowLoadFromUrl={true}
 				loadUrlOnMount={false}
-				defaultLoadUrl={"https://miyehn.me/ffxiv-blm-rotation/presets/lines/default.txt"}
+				defaultLoadUrl={"https://akairyugestalter.github.io/ffxiv-blm-rotation/presets/lines/default.txt"}
 				onLoadFn={(content: Fixme)=>{
 					if (content.fileType === FileType.SkillSequencePresets) {
 						controller.appendFilePresets(content);
