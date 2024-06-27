@@ -1,5 +1,11 @@
 [
 	{
+		"date": "06/26/2024",
+		"changes": [
+			"Akairyu - Updates to simulate lv 90 BLM @ Dawntrail launch (Manafont, MP recovery, Thunderhead, etc.)"
+		]
+	},
+	{
 		"date": "2/27/24",
 		"changes": [
 			"Let there be an empty timeline slot if none is loaded from localStorage. This should fix the issue that causes new user (browser) to get stuck when trying to use skills but there's no timeline."
