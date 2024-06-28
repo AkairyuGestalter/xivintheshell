@@ -1,5 +1,11 @@
 [
 	{
+		"date": "06/27/2024",
+		"changes": [
+			"Akairyu - Added Thunderhead status icon & removed Thundercloud/Sharpcast"
+		]
+	},
+	{
 		"date": "06/26/2024",
 		"changes": [
 			"Akairyu - Updates to simulate lv 90 BLM @ Dawntrail launch (Manafont, MP recovery, Thunderhead, etc.)"
