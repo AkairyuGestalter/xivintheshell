@@ -357,64 +357,29 @@ export class SkillsList extends Map<SkillName, Skill> {
 				return game.hasThunderhead();
 			},
 			(game, node) => {
-				/*if (game.resources.get(ResourceType.Thundercloud).available(1)) // made instant via thundercloud
-				{*/
-					// potency
-					addT3Potencies(node, false); // should call on capture
-					let p0 = node.getPotencies()[0];
-					p0.base = 160;
-					node.getPotencies().forEach(p=>{ p.snapshotTime = game.getDisplayTime(); });
+				// potency
+				addT3Potencies(node, false); // should call on capture
+				let p0 = node.getPotencies()[0];
+				p0.base = 160;
+				node.getPotencies().forEach(p=>{ p.snapshotTime = game.getDisplayTime(); });
 
-					// tincture
-					if (game.resources.get(ResourceType.Tincture).available(1)) {
-						node.addBuff(ResourceType.Tincture);
-					}
+				// tincture
+				if (game.resources.get(ResourceType.Tincture).available(1)) {
+					node.addBuff(ResourceType.Tincture);
+				}
 
-					game.useInstantSkill({
-						skillName: SkillName.Thunder3,
-						onApplication: () => {
-							controller.resolvePotency(p0);
-							applyThunderDoT(game, node);
-						},
-						dealDamage: true,
-						node: node
-					});
-					let thundercloud = game.resources.get(ResourceType.Thundercloud);
-					thundercloud.consume(1);
-					thundercloud.removeTimer();
-					// if there's a sharpcast stack, consume it and gain (a potentially new) proc
-					/*let sc = game.resources.get(ResourceType.Sharpcast);
-					if (sc.available(1)) {
-						game.gainThundercloudProc();
-						sc.consume(1);
-						sc.removeTimer();
-					}*/
-				/*}*/ /*else {
-					game.castSpell({skillName: SkillName.Thunder3, onButtonPress: () => {
-						// nothing here really
-						}, onCapture: (cap: SkillCaptureCallbackInfo) => {
-
-						// potency
-						addT3Potencies(node, false);
-
-						// potency snapshot time
-						node.getPotencies().forEach(p=>{ p.snapshotTime = game.getDisplayTime() });
-
-						// tincture
-						if (game.resources.get(ResourceType.Tincture).available(1)) {
-							node.addBuff(ResourceType.Tincture);
-						}
-						// if there's a sharpcast stack, consume it and gain (a potentially new) proc
-						let sc = game.resources.get(ResourceType.Sharpcast);
-						if (sc.available(1)) {
-							game.gainThundercloudProc();
-							sc.consume(1);
-							sc.removeTimer();
-						}
-					}, onApplication: (app: SkillApplicationCallbackInfo) => {
+				game.useInstantSkill({
+					skillName: SkillName.Thunder3,
+					onApplication: () => {
+						controller.resolvePotency(p0);
 						applyThunderDoT(game, node);
-					}, node: node});
-				}*/
+					},
+					dealDamage: true,
+					node: node
+				});
+				let thunderhead = game.resources.get(ResourceType.Thunderhead);
+				thunderhead.consume(1);
+				thunderhead.removeTimer();
 			}
 		));
 
@@ -432,7 +397,7 @@ export class SkillsList extends Map<SkillName, Skill> {
 					onApplication: () => {
 						game.resources.get(ResourceType.Mana).gain(10000);
 						game.resources.get(ResourceType.UmbralHeart).gain(3);
-						game.gainThundercloudProc();
+						game.gainThunderheadProc();
 						game.resources.get(ResourceType.Paradox).gain(1);
 						game.switchToAForUI(ResourceType.AstralFire, 3);
 						game.startOrRefreshEnochian();

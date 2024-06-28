@@ -1,4 +1,4 @@
-import {Aspect, Debug, ProcMode, ResourceType, SkillName, SkillReadyStatus, WarningType} from "./Common"
+import {Aspect, Debug, ResourceType, SkillName, SkillReadyStatus, WarningType} from "./Common"
 import {GameConfig} from "./GameConfig"
 import {StatsModifier} from "./StatsModifier";
 import {SkillApplicationCallbackInfo, SkillCaptureCallbackInfo, SkillsList} from "./Skills"
@@ -49,7 +49,7 @@ export class GameState {
 		this.resources.set(ResourceType.Enochian, new Resource(ResourceType.Enochian, 1, 0));
 		this.resources.set(ResourceType.Paradox, new Resource(ResourceType.Paradox, 1, 0));
 		this.resources.set(ResourceType.Firestarter, new Resource(ResourceType.Firestarter, 1, 0));
-		this.resources.set(ResourceType.Thundercloud, new Resource(ResourceType.Thundercloud, 1, 0));
+		this.resources.set(ResourceType.Thunderhead, new Resource(ResourceType.Thunderhead, 1, 0));
 		this.resources.set(ResourceType.ThunderDoT, new DoTBuff(ResourceType.ThunderDoT, 1, 0));
 		this.resources.set(ResourceType.Manaward, new Resource(ResourceType.Manaward, 1, 0));
 		this.resources.set(ResourceType.Triplecast, new Resource(ResourceType.Triplecast, 3, 0));
@@ -186,9 +186,6 @@ export class GameState {
 					// access potencies at index [1, 10] (since 0 is initial potency)
 					let p = thunder.node.getPotencies()[thunder.tickCount];
 					controller.resolvePotency(p);
-					if (this.config.procMode===ProcMode.Always || (this.config.procMode===ProcMode.RNG && this.rng() < 0.1)) {
-						this.gainThundercloudProc();
-					}
 				}
 			}
 			// increment count
@@ -279,23 +276,23 @@ export class GameState {
 	getIceStacks() { return this.resources.get(ResourceType.UmbralIce).availableAmount(); }
 	getUmbralHearts() { return this.resources.get(ResourceType.UmbralHeart).availableAmount(); }
 	getMP() { return this.resources.get(ResourceType.Mana).availableAmount(); }
-	hasThunderhead() { return this.resources.get(ResourceType.Thundercloud).availableAmount() > 0; }
+	hasThunderhead() { return this.resources.get(ResourceType.Thunderhead).availableAmount() > 0; }
 
 	getDisplayTime() {
 		return (this.time - this.config.countdown);
 	}
 
 	// could happen from sharpcasted T3, or from a tick
-	gainThundercloudProc() {
-		let thundercloud = this.resources.get(ResourceType.Thundercloud);
+	gainThunderheadProc() {
+		let thunderhead = this.resources.get(ResourceType.Thunderhead);
 		let duration = this.config.extendedBuffTimes ? 31 : 30;
-		if (thundercloud.available(1)) { // already has a proc; reset its timer
-			thundercloud.overrideTimer(this, duration);
+		if (thunderhead.available(1)) { // already has a proc; reset its timer
+			thunderhead.overrideTimer(this, duration);
 		} else { // there's currently no proc. gain one.
-			thundercloud.gain(1);
+			thunderhead.gain(1);
 			this.resources.addResourceEvent({
-				rscType: ResourceType.Thundercloud,
-				name: "drop thundercloud proc",
+				rscType: ResourceType.Thunderhead,
+				name: "drop thunderhead proc",
 				delay: duration,
 				fnOnRsc: (rsc: Resource) => {
 					rsc.consume(1);
@@ -313,7 +310,7 @@ export class GameState {
 		if (rscType===ResourceType.AstralFire)
 		{
 			if (af.availableAmount() < 1) {
-				this.gainThundercloudProc();
+				this.gainThunderheadProc();
 			}
 			af.gain(numStacks);
 			if (ui.available(3) && uh.available(3)) {
@@ -324,7 +321,7 @@ export class GameState {
 		else if (rscType===ResourceType.UmbralIce)
 		{
 			if (ui.availableAmount() < 1) {
-				this.gainThundercloudProc();
+				this.gainThunderheadProc();
 			}
 			ui.gain(numStacks);
 			/*if (af.available(3)) {
@@ -669,7 +666,7 @@ export class GameState {
 		let instantCastAvailable = this.resources.get(ResourceType.Triplecast).available(1)
 			|| this.resources.get(ResourceType.Swiftcast).available(1)
 			|| (skillName===SkillName.Paradox && this.getIceStacks()>0)
-			|| (skillName===SkillName.Thunder3 && this.resources.get(ResourceType.Thundercloud).available(1))
+			|| (skillName===SkillName.Thunder3 && this.resources.get(ResourceType.Thunderhead).available(1))
 			|| (skillName===SkillName.Fire3 && this.resources.get(ResourceType.Firestarter).available((1)))
 			|| (skillName===SkillName.Xenoglossy && this.resources.get(ResourceType.Polyglot).available(1)
 			|| (skillName===SkillName.UmbralSoul && this.getIceStacks()>0)); // lmfao why does this count as a spell
@@ -677,7 +674,7 @@ export class GameState {
 		let notBlocked = timeTillAvailable <= Debug.epsilon;
 		let enoughMana = capturedManaCost <= currentMana
 			|| (skillName===SkillName.Paradox && this.getIceStacks()>0)
-			|| (skillName===SkillName.Thunder3 && this.resources.get(ResourceType.Thundercloud).available(1))
+			|| (skillName===SkillName.Thunder3 && this.resources.get(ResourceType.Thunderhead).available(1))
 			|| (skillName===SkillName.Fire3 && this.resources.get(ResourceType.Firestarter).available((1)));
 		let reqsMet = skill.available();
 		let status = SkillReadyStatus.Ready;
@@ -708,7 +705,7 @@ export class GameState {
 		} else if (skillName === SkillName.Fire3) {// F3P
 			if (this.resources.get(ResourceType.Firestarter).available(1)) highlight = true;
 		} else if (skillName === SkillName.Thunder3) {// T3P
-			if (this.resources.get(ResourceType.Thundercloud).available(1)) highlight = true;
+			if (this.resources.get(ResourceType.Thunderhead).available(1)) highlight = true;
 		} else if (skillName === SkillName.Foul || skillName === SkillName.Xenoglossy) {// polyglot
 			if (this.resources.get(ResourceType.Polyglot).available(1)) highlight = true;
 		}
@@ -741,7 +738,7 @@ export class GameState {
 		s += "UI:\t" + this.resources.get(ResourceType.UmbralIce).availableAmount() + "\n";
 		s += "UH:\t" + this.resources.get(ResourceType.UmbralHeart).availableAmount() + "\n";
 		s += "Enochian:\t" + this.resources.get(ResourceType.Enochian).availableAmount() + "\n";
-		s += "TC:\t" + this.resources.get(ResourceType.Thundercloud).availableAmount() + "\n";
+		s += "TC:\t" + this.resources.get(ResourceType.Thunderhead).availableAmount() + "\n";
 		s += "LL:\t" + this.resources.get(ResourceType.LeyLines).availableAmount() + "\n";
 		s += "Poly:\t" + this.resources.get(ResourceType.Polyglot).availableAmount() + "\n";
 		s += "GCD:\t" + this.cooldowns.get(ResourceType.cd_GCD).availableAmount().toFixed(3) + "\n";

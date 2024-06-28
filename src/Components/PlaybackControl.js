@@ -160,7 +160,6 @@ function ConfigSummary(props) {
 		GCD: {ct_2_5}
 		<br/>{localize({en: "Lucid tick offset ", zh: "醒梦&跳蓝时间差 "})}<Help topic={"lucidTickOffset"} content={lucidOffsetDesc}/>: {lucidTickOffset}
 		<br/>{localize({en: "Thunder DoT tick offset ", zh: "跳雷&跳蓝时间差 "})}<Help topic={"thunderTickOffset"} content={thunderOffsetDesc}/>: {thunderTickOffset}
-		{procMode===ProcMode.RNG ? undefined : <span style={{color: "mediumpurple"}}><br/>Procs: {procMode}</span>}
 		{numOverrides === 0 ? undefined : <span style={{color: "mediumpurple"}}><br/>{numOverrides} resource override(s)</span>}
 	</div>
 }
@@ -634,20 +633,6 @@ export class Config extends React.Component {
 					})
 				}/>: </span>} onChange={this.setRandomSeed}/>
 			<div>
-				<span>{localize({en: "proc mode ", zh: "随机BUFF获取 "})}<Help topic={"procMode"} content={
-
-					localize({
-					en: "Default RNG: 40% Firestarter, 10% Thundercloud",
-					zh: "RNG会像游戏内一样，相应技能40%概率获得火苗，10%概率获得雷云，Always则每次都会触发火苗/雷云，Never则从不触发。"
-				})
-				}/>: </span>
-				<select style={{outline: "none"}} value={this.state.procMode} onChange={this.setProcMode}>
-					<option key={ProcMode.RNG} value={ProcMode.RNG}>RNG</option>
-					<option key={ProcMode.Never} value={ProcMode.Never}>Never</option>
-					<option key={ProcMode.Always} value={ProcMode.Always}>Always</option>
-				</select>
-			</div>
-			<div>
 				<input type="checkbox" style={{position: "relative", top: 3, marginRight: 5}}
 					   checked={this.state.extendedBuffTimes}
 					   onChange={this.setExtendedBuffTimes}/>
@@ -657,7 +642,6 @@ export class Config extends React.Component {
 						<div className={"paragraph"}>Having this checked will give the following duration overrides:</div>
 						<div className={"paragraph"}> - Triplecast: 15.7s</div>
 						<div className={"paragraph"}> - Firestarter: 31s</div>
-						<div className={"paragraph"}> - Thundercloud: 41s</div>
 					</div>
 				}/></span>
 			</div>

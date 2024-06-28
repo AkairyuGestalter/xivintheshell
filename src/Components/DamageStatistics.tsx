@@ -139,7 +139,7 @@ function BuffTag(props: {buff?: PotencyModifierType, tc?: boolean}) {
 		color = colors.resources.enochian;
 	} else if (props.tc) {
 		text = localize({en: "TC", zh: "雷云"});
-		color = colors.resources.thundercloud;
+		color = colors.resources.thunderhead;
 	}
 	return <span style={{
 		borderRadius: 2,
