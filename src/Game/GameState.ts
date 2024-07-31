@@ -488,8 +488,9 @@ export class GameState {
 			game.resources.takeResourceLock(ResourceType.NotAnimationLocked, game.config.getSkillAnimationLock(props.skillName));
 		}
 
-		// Paradox made instant via AF
-		if (props.skillName === SkillName.Paradox && this.getFireStacks() > 0) {
+		
+		// Paradox is instant
+		if (props.skillName === SkillName.Paradox) {
 			instantCast(this, undefined);
 			return;
 		}
