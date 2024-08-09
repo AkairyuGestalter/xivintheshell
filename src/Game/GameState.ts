@@ -327,10 +327,9 @@ export class GameState {
 				this.gainThunderheadProc();
 			}
 			ui.gain(numStacks);
-			/*if (af.available(3)) {
+			if (af.available(3)) {
 				paradox.gain(1);
-			}*/
-			paradox.consume(paradox.availableAmount());
+			}
 			af.consume(af.availableAmount());
 		}
 	}
