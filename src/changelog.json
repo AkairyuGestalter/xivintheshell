@@ -1,5 +1,13 @@
 [
 	{
+		"date": "08/09/2024",
+		"changes": [
+			"Akairyu - Updated potencies for 7.05, and support changed actions:",
+			"- Readded support for Ice Paradox",
+			"- Handle Umbral Soul pausing of UI timer (initially developed by miyehn)"
+		]
+	},
+	{
 		"date": "06/27/2024",
 		"changes": [
 			"Akairyu - Added Thunderhead status icon & removed Thundercloud/Sharpcast"
